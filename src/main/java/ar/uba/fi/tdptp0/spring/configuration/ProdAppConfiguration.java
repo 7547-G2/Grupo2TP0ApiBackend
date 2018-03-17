@@ -1,3 +1,4 @@
+/*
 package ar.uba.fi.tdptp0.spring.configuration;
 
 import ar.uba.fi.tdptp0.service.weather.OpenWeatherMapWeatherService;
@@ -16,3 +17,4 @@ public class ProdAppConfiguration {
         return new OpenWeatherMapWeatherService(openWeatherMapClient);
     }
 }
+*/

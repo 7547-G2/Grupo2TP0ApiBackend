@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 import java.io.IOException;
 
 @Configuration
-@Profile("dev")
+//@Profile("dev")
 public class DevAppConfiguration {
 
     @Bean
