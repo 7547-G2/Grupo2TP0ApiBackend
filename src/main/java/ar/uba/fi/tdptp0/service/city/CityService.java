@@ -1,57 +1,40 @@
 package ar.uba.fi.tdptp0.service.city;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class CityService {
 
+    private static final String CITIES_KEY = "cities";
+    private static final String COUNTRY_KEY = "country";
 
-    private static final String FILE_NAME = "shortCityList.json";
     private static String cityJson;
+    private static List<Object> citiesList;
 
-    public CityService() throws IOException {
+    public CityService(String fileName) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(FILE_NAME).getFile());
+        File file = new File(classLoader.getResource(fileName).getFile());
         cityJson = new String(Files.readAllBytes(file.toPath()));
+        ObjectMapper mapper = new ObjectMapper();
+        Map cityMap = mapper.readValue(cityJson, Map.class);
+        citiesList = (List<Object>) cityMap.get(CITIES_KEY);
     }
 
-/*    public String getCity(String countryName) {
-        ObjectMapper mapper = new ObjectMapper();
-        Map cityMap = null;
-        try {
-            cityMap = mapper.readValue(cityJson, Map.class);
-        } catch (IOException e) {
-            //TODO Do something here
-            return "error";
-        }
-
-        List<Object> cities = (List<Object>) cityMap.get("Students");
-        Object[] delhiStudents = cities
-                .stream()
-                .filter(student -> ((Map)student).get("City").equals("Delhi"))
-                .toArray();
-
-        return "ac";
-    }*/
-
     public String getCity(String countryName) {
-        JSONArray jsonArray = new JSONArray(cityJson);
-        Object[] abc = StreamSupport.stream(jsonArray.spliterator(), false)
-                .map(JSONObject.class::cast)
-                .filter(o -> o.get("country").equals(countryName))
+        Object[] filteredCities = citiesList
+                .stream()
+                .filter(student -> ((Map)student).get(COUNTRY_KEY).equals(countryName))
                 .toArray();
-        return abc.toString();
+
+        Gson gson = new Gson();
+        String result = gson.toJson(filteredCities);
+
+        return result;
     }
 }

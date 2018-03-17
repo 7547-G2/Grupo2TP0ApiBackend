@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CitiesController {
 
-    private final CityService cityService;
+    private CityService cityService;
 
     @Autowired
     public CitiesController(CityService cityService) {

@@ -4,17 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CityServiceTest {
 
-    private CityService cityService = new CityService();
+    private CityService cityService = new CityService("shortCityList.json");
 
     CityServiceTest() throws IOException {
     }
 
     @Test
     void getCity() {
-        cityService.getCity("RU");
+        String abc = cityService.getCity("RU");
     }
 }

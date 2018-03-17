@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.io.IOException;
+
 @Configuration
 @Profile("dev")
 public class DevAppConfiguration {
 
     @Bean
-    public WeatherService weatherService() {
+    public WeatherService weatherService() throws IOException {
         return new OfflineWeatherService();
     }
 }
