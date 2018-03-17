@@ -3,3 +3,6 @@ server:
 spring:
   profiles:
     active: dev
+app:
+  files:
+    cities: cityList.json
