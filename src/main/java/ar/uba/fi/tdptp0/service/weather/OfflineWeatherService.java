@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 
 public class OfflineWeatherService implements WeatherService {
@@ -15,6 +16,8 @@ public class OfflineWeatherService implements WeatherService {
 
     public OfflineWeatherService() throws IOException {
         LOGGER.info("Trying to load WeatherService with filename: {}", FILE_NAME);
+        URL abc = ClassLoader.getSystemResource(FILE_NAME);
+        LOGGER.info("Trying to load WeatherService with URL: {}", abc);
         String path = ClassLoader.getSystemResource(FILE_NAME).getPath();
         LOGGER.info("Trying to load WeatherService with path: {}", path);
         File file = new File(path);
