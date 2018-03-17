@@ -37,4 +37,8 @@ public class CityService {
 
         return result;
     }
+
+    public String getCity() {
+        return cityJson;
+    }
 }

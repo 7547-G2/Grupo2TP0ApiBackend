@@ -20,4 +20,9 @@ public class CitiesController {
     public String getCities(@PathVariable("countryName") String countryName) {
         return cityService.getCity(countryName);
     }
+
+    @GetMapping(value = "/city/country/", produces = {"application/json"})
+    public String getCities() {
+        return cityService.getCity();
+    }
 }
