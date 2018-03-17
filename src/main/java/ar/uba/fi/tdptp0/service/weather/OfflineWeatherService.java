@@ -10,8 +10,7 @@ public class OfflineWeatherService implements WeatherService {
     private final String outputJson;
 
     public OfflineWeatherService() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(FILE_NAME).getFile());
+        File file = new File(ClassLoader.getSystemResource(FILE_NAME).getPath());
         outputJson = new String(Files.readAllBytes(file.toPath()));
     }
 

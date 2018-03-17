@@ -18,8 +18,7 @@ public class CityService {
     private static List<Object> citiesList;
 
     public CityService(String fileName) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(fileName).getFile());
+        File file = new File(ClassLoader.getSystemResource(fileName).getPath());
         cityJson = new String(Files.readAllBytes(file.toPath()));
         ObjectMapper mapper = new ObjectMapper();
         Map cityMap = mapper.readValue(cityJson, Map.class);
