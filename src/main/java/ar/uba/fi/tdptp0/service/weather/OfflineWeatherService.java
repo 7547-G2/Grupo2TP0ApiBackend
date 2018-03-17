@@ -15,7 +15,9 @@ public class OfflineWeatherService implements WeatherService {
 
     public OfflineWeatherService() throws IOException {
         LOGGER.info("Trying to load WeatherService with filename: {}", FILE_NAME);
-        File file = new File(ClassLoader.getSystemResource(FILE_NAME).getPath());
+        String path = ClassLoader.getSystemResource(FILE_NAME).getPath();
+        LOGGER.info("Trying to load WeatherService with path: {}", path);
+        File file = new File(path);
         LOGGER.info("Now I have the file with path: {}", file.toPath());
         outputJson = new String(Files.readAllBytes(file.toPath()));
     }
