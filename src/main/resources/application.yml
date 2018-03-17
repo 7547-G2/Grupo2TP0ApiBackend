@@ -3,4 +3,4 @@ spring:
     active: dev
 app:
   files:
-    cities: cityList.json
+    cities: shortCityList.json

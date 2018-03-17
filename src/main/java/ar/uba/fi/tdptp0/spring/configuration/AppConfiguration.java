@@ -11,7 +11,7 @@ import java.io.IOException;
 public class AppConfiguration {
 
     @Bean
-    public CityService cityService() throws IOException {
-        return new CityService("cityList.json");
+    public CityService cityService(@Value("${app.files.cities}") String fileName) throws IOException {
+        return new CityService(fileName);
     }
 }
