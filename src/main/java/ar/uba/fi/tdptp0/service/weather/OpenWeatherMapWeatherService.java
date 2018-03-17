@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class OpenWeatherMapWeatherService implements WeatherService {
 
-    OpenWeatherMapClient openWeatherMapClient;
+    private OpenWeatherMapClient openWeatherMapClient;
 
     @Autowired
     public OpenWeatherMapWeatherService(OpenWeatherMapClient openWeatherMapClient) {
