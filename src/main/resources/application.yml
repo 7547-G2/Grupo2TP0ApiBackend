@@ -2,5 +2,6 @@ spring:
   profiles:
     active: prod
 app:
+  api-key: b14c689324c9d7fa0e17735d6fe38087
   files:
     cities: cityList.json
