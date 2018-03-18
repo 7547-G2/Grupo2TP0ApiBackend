@@ -26,28 +26,58 @@ public class OpenWeatherMapWeatherService implements WeatherService {
         String jsonString = openWeatherMapClient.getWeather(id);
         JSONParser parser = new JSONParser();
         JSONArray listOf5Days = new JSONArray();
+        JSONObject responseJson = new JSONObject();
+        JSONObject json = new JSONObject();
         try {
-            JSONObject json = (JSONObject) parser.parse(jsonString);
-            JSONArray listOfDays = (JSONArray) json.get("list");
-            int cantidad = 0;
-            for(int index = 0; (cantidad < 10) && (index<=listOfDays.size());index++){
-                JSONObject oneTemp = (JSONObject) listOfDays.get(index);
-                if (((String)oneTemp.get("dt_txt")).contains("12:00:00") 
-                    || ((String)oneTemp.get("dt_txt")).contains("00:00:00")){
-                    JSONObject oneMain = (JSONObject) oneTemp.get("main");
-                    double value = Double.parseDouble(oneMain.get("temp").toString());
-                    oneTemp.put("temp_celsius",new Double(value -273.15));
-                    value = Double.parseDouble(oneMain.get("temp_min").toString());                    
-                    oneTemp.put("temp_min_celsius",new Double(value -273.15));
-                    value = Double.parseDouble(oneMain.get("temp_max").toString());                    
-                    oneTemp.put("temp_max_celsius",new Double(value -273.15));
-                    listOf5Days.add(oneTemp);
-                    cantidad++;
-                }
-            }    
+            json = (JSONObject) parser.parse(jsonString);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return listOf5Days.toString();
+        JSONArray listOfDays = (JSONArray) json.get("list");
+        responseJson.put("id",((JSONObject)json.get("city")).get("id"));
+        responseJson.put("name",((JSONObject)json.get("city")).get("name"));
+        responseJson.put("country",((JSONObject)json.get("city")).get("country"));
+        int cantidad = 0;
+        int dia = 0;
+        JSONObject newDay = new JSONObject();
+        for(int index = 0; (cantidad < 10) && (index<=listOfDays.size());index++){
+            JSONObject oneTemp = (JSONObject) listOfDays.get(index);
+            if (((String)oneTemp.get("dt_txt")).contains("00:00:00")){
+                JSONObject oneMain = (JSONObject) oneTemp.get("main");
+                double value = Double.parseDouble(oneMain.get("temp").toString());
+                newDay.put("nightTemp",new Double(value -273.15));
+                String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
+                newDay.put("date",date);
+                JSONArray oneWeather = (JSONArray) oneTemp.get("weather");
+                JSONObject weather = (JSONObject) oneWeather.get(0);
+                String icon = ((String)weather.get("icon"));
+                newDay.put("nightIcon",icon);
+                cantidad++;
+            } else if (((String)oneTemp.get("dt_txt")).contains("12:00:00")){
+                JSONObject oneMain = (JSONObject) oneTemp.get("main");
+                double value = Double.parseDouble(oneMain.get("temp").toString());
+                newDay.put("dayTemp",new Double(value -273.15));
+                String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
+                newDay.put("date",date);
+                JSONArray oneWeather = (JSONArray) oneTemp.get("weather");
+                JSONObject weather = (JSONObject) oneWeather.get(0);
+                String icon = ((String)weather.get("icon"));
+                newDay.put("dayIcon",icon);
+                listOf5Days.add(newDay);
+                newDay = new JSONObject();
+                cantidad++;
+                dia++;
+            }
+        }
+        if (!newDay.toString().equals("{}") ){
+            listOf5Days.add(newDay);
+        }
+        responseJson.put("info",listOf5Days);    
+
+        return responseJson.toString();
     }
+
+    // public String forecastData(Long id) {
+    //     return openWeatherMapClient.getWeather(id);
+    // }
 }
