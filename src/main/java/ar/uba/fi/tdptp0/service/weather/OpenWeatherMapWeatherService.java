@@ -4,9 +4,10 @@ import ar.uba.fi.tdptp0.spring.client.OpenWeatherMapClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.json.simple.JSONObject;
-
+import java.util.Date;
 import com.google.gson.JsonArray;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
@@ -39,19 +40,31 @@ public class OpenWeatherMapWeatherService implements WeatherService {
         responseJson.put("country",((JSONObject)json.get("city")).get("country"));
         int cantidad = 0;
         int dia = 0;
+        String lastDate = "";
+        boolean primero = true;
         JSONObject newDay = new JSONObject();
-        for(int index = 0; (cantidad < 10) && (index<=listOfDays.size());index++){
+        for(int index = 0; (dia < 5) && (index<=listOfDays.size());index++){
             JSONObject oneTemp = (JSONObject) listOfDays.get(index);
+
             if (((String)oneTemp.get("dt_txt")).contains("00:00:00")){
+                if (primero){
+                    Date date = new Date();
+                    String modifiedDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                    lastDate = modifiedDate;
+                    primero = false;
+                }
                 JSONObject oneMain = (JSONObject) oneTemp.get("main");
                 double value = Double.parseDouble(oneMain.get("temp").toString());
                 newDay.put("nightTemp",new Double(value -273.15));
                 String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
-                newDay.put("date",date);
+                newDay.put("date",lastDate);
                 JSONArray oneWeather = (JSONArray) oneTemp.get("weather");
                 JSONObject weather = (JSONObject) oneWeather.get(0);
                 String icon = ((String)weather.get("icon"));
                 newDay.put("nightIcon",icon);
+                listOf5Days.add(newDay);
+                newDay = new JSONObject();
+                dia++;
                 cantidad++;
             } else if (((String)oneTemp.get("dt_txt")).contains("12:00:00")){
                 JSONObject oneMain = (JSONObject) oneTemp.get("main");
@@ -63,10 +76,8 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                 JSONObject weather = (JSONObject) oneWeather.get(0);
                 String icon = ((String)weather.get("icon"));
                 newDay.put("dayIcon",icon);
-                listOf5Days.add(newDay);
-                newDay = new JSONObject();
+                lastDate = date;
                 cantidad++;
-                dia++;
             }
         }
         if (!newDay.toString().equals("{}") ){
