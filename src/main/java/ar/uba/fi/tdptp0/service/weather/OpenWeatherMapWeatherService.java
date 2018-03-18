@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.json.simple.JSONObject;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +41,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
         responseJson.put("name",((JSONObject)json.get("city")).get("name"));
         responseJson.put("country",((JSONObject)json.get("city")).get("country"));
         int cantidad = 0;
+        List<Double> valoresTemperatura = new ArrayList<Double>();
         int dia = 0;
         String lastDate = "";
         boolean primero = true;
@@ -54,8 +57,14 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                     primero = false;
                 }
                 JSONObject oneMain = (JSONObject) oneTemp.get("main");
-                double value = Double.parseDouble(oneMain.get("temp").toString());
-                newDay.put("nightTemp",new Double(value -273.15));
+                Double value = new Double(Double.parseDouble(oneMain.get("temp").toString())-273.15);
+                Double cantidadIteracion = 1.0;
+                for (Double s : valoresTemperatura) {
+                    value += s;
+                    cantidadIteracion++;
+                }
+                value = value / cantidadIteracion;
+                newDay.put("nightTemp",value);
                 String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
                 newDay.put("date",lastDate);
                 JSONArray oneWeather = (JSONArray) oneTemp.get("weather");
@@ -68,8 +77,14 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                 cantidad++;
             } else if (((String)oneTemp.get("dt_txt")).contains("12:00:00")){
                 JSONObject oneMain = (JSONObject) oneTemp.get("main");
-                double value = Double.parseDouble(oneMain.get("temp").toString());
-                newDay.put("dayTemp",new Double(value -273.15));
+                Double value = new Double(Double.parseDouble(oneMain.get("temp").toString())-273.15);
+                Double cantidadIteracion = 1.0;
+                for (Double s : valoresTemperatura) {
+                    value += s;
+                    cantidadIteracion++;
+                }
+                value = value / cantidadIteracion;
+                newDay.put("dayTemp",value);
                 String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
                 newDay.put("date",date);
                 JSONArray oneWeather = (JSONArray) oneTemp.get("weather");
@@ -78,6 +93,10 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                 newDay.put("dayIcon",icon);
                 lastDate = date;
                 cantidad++;
+            } else {
+                JSONObject oneMain = (JSONObject) oneTemp.get("main");
+                Double value = new Double(Double.parseDouble(oneMain.get("temp").toString())-273.15);
+                valoresTemperatura.add(value);
             }
         }
         if (!newDay.toString().equals("{}") ){
