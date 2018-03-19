@@ -49,7 +49,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
         for(int index = 0; (dia < 5) && (index<listOfDays.size());index++){
             JSONObject oneTemp = (JSONObject) listOfDays.get(index);
 
-            if (((String)oneTemp.get("dt_txt")).contains("00:00:00")){
+            if (((String)oneTemp.get("dt_txt")).contains("03:00:00")){
                 if (primero){
                     Date date = new Date();
                     String modifiedDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
@@ -64,6 +64,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                     cantidadIteracion++;
                 }
                 value = value / cantidadIteracion;
+                valoresTemperatura = new ArrayList<Double>();
                 newDay.put("nightTemp",value);
                 String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
                 newDay.put("date",lastDate);
@@ -75,7 +76,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                 newDay = new JSONObject();
                 dia++;
                 cantidad++;
-            } else if (((String)oneTemp.get("dt_txt")).contains("12:00:00")){
+            } else if (((String)oneTemp.get("dt_txt")).contains("15:00:00")){
                 JSONObject oneMain = (JSONObject) oneTemp.get("main");
                 Double value = new Double(Double.parseDouble(oneMain.get("temp").toString())-273.15);
                 Double cantidadIteracion = 1.0;
@@ -84,6 +85,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
                     cantidadIteracion++;
                 }
                 value = value / cantidadIteracion;
+                valoresTemperatura = new ArrayList<Double>();
                 newDay.put("dayTemp",value);
                 String date = ((String)oneTemp.get("dt_txt")).substring(0,10);
                 newDay.put("date",date);
