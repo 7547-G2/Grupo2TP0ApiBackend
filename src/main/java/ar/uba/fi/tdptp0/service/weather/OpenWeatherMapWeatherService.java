@@ -46,7 +46,7 @@ public class OpenWeatherMapWeatherService implements WeatherService {
         String lastDate = "";
         boolean primero = true;
         JSONObject newDay = new JSONObject();
-        for(int index = 0; (dia < 5) && (index<=listOfDays.size());index++){
+        for(int index = 0; (dia < 5) && (index<listOfDays.size());index++){
             JSONObject oneTemp = (JSONObject) listOfDays.get(index);
 
             if (((String)oneTemp.get("dt_txt")).contains("00:00:00")){
